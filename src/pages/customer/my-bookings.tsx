@@ -4,9 +4,10 @@ import { CustomerHeader } from '../../components/customer/customer-header';
 import { useBooking } from '../../lib/context';
 import { Card, CardContent } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
-import { Calendar, DoorOpen, Users, X, Edit2, Download, Clock } from 'lucide-react';
+import { Calendar, DoorOpen, Users, X, Edit2, Download, Clock, Eye } from 'lucide-react';
 import { EditCustomerBookingModal } from '../../components/customer/edit-booking-modal';
 import { ReceiptModal } from '../../components/customer/receipt-modal';
+import { BookingViewModal } from '../../components/customer/booking-view-modal';
 import { Booking, EventBooking } from '../../lib/types';
 import { showSuccessNotification } from '../../lib/notifications';
 
@@ -17,6 +18,8 @@ export default function MyBookingsPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [receiptData, setReceiptData] = useState<{ booking?: Booking | null; event?: EventBooking | null }>({});
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [viewData, setViewData] = useState<{ booking?: Booking | null; event?: EventBooking | null }>({});
 
   const handleCancel = (bookingId: string) => {
     if (confirm('Are you sure you want to cancel this booking?')) {
@@ -54,6 +57,11 @@ export default function MyBookingsPage() {
   const openReceiptModal = (booking?: Booking | null, event?: EventBooking | null) => {
     setReceiptData({ booking, event });
     setIsReceiptOpen(true);
+  };
+
+  const openViewModal = (booking?: Booking | null, event?: EventBooking | null) => {
+    setViewData({ booking, event });
+    setIsViewOpen(true);
   };
 
   const statusColors: { [key: string]: string } = {
@@ -171,13 +179,22 @@ export default function MyBookingsPage() {
                             ₱{booking.totalPrice}
                           </p>
                         </div>
-                        <button
-                          onClick={() => openReceiptModal(booking, null)}
-                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
-                        >
-                          <Download size={16} />
-                          Receipt
-                        </button>
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => openViewModal(booking, null)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
+                          <button
+                            onClick={() => openReceiptModal(booking, null)}
+                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Download size={16} />
+                            Receipt
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -262,6 +279,13 @@ export default function MyBookingsPage() {
                           </p>
                         </div>
                         <div className="flex gap-2 flex-col">
+                          <button
+                            onClick={() => openViewModal(booking, null)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
                           <button
                             onClick={() => openReceiptModal(booking, null)}
                             className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
@@ -371,13 +395,22 @@ export default function MyBookingsPage() {
                             ₱{booking.totalPrice}
                           </p>
                         </div>
-                        <button
-                          onClick={() => openReceiptModal(booking, null)}
-                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
-                        >
-                          <Download size={16} />
-                          Receipt
-                        </button>
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => openViewModal(booking, null)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
+                          <button
+                            onClick={() => openReceiptModal(booking, null)}
+                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Download size={16} />
+                            Receipt
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -443,13 +476,22 @@ export default function MyBookingsPage() {
                             ₱{event.totalPrice}
                           </p>
                         </div>
-                        <button
-                          onClick={() => openReceiptModal(null, event)}
-                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
-                        >
-                          <Download size={16} />
-                          Receipt
-                        </button>
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => openViewModal(null, event)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
+                          <button
+                            onClick={() => openReceiptModal(null, event)}
+                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Download size={16} />
+                            Receipt
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -515,6 +557,13 @@ export default function MyBookingsPage() {
                           </p>
                         </div>
                         <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => openViewModal(null, event)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2"
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
                           <button
                             onClick={() => openReceiptModal(null, event)}
                             className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2"
@@ -594,13 +643,22 @@ export default function MyBookingsPage() {
                         <p className="text-3xl font-bold text-gray-800">
                           ₱{event.totalPrice}
                         </p>
-                        <button
-                          onClick={() => openReceiptModal(null, event)}
-                          className="mt-4 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2 w-full"
-                        >
-                          <Download size={16} />
-                          Receipt
-                        </button>
+                        <div className="flex flex-col gap-2 mt-4">
+                          <button
+                            onClick={() => openViewModal(null, event)}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center gap-2 w-full"
+                          >
+                            <Eye size={16} />
+                            View
+                          </button>
+                          <button
+                            onClick={() => openReceiptModal(null, event)}
+                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition flex items-center justify-center gap-2 w-full"
+                          >
+                            <Download size={16} />
+                            Receipt
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -639,6 +697,16 @@ export default function MyBookingsPage() {
           onClose={() => {
             setIsReceiptOpen(false);
             setReceiptData({});
+          }}
+        />
+
+        <BookingViewModal
+          booking={viewData.booking}
+          event={viewData.event}
+          isOpen={isViewOpen}
+          onClose={() => {
+            setIsViewOpen(false);
+            setViewData({});
           }}
         />
       </main>
