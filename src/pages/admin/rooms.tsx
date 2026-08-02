@@ -4,7 +4,7 @@ import { AdminSidebar } from '../../components/admin/sidebar';
 import { AdminHeader } from '../../components/admin/header';
 import { useBooking } from '../../lib/context';
 import { Badge } from '../../components/ui/badge';
-import { Edit2, Trash2, Plus, Upload, MoreVertical } from 'lucide-react';
+import { Edit2, Trash2, Plus, Upload, MoreVertical, Search } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +28,7 @@ export default function RoomsPage() {
   const navigate = useNavigate();
   const { rooms, addRoom, updateRoom, deleteRoom } = useBooking();
   const [showAddRoom, setShowAddRoom] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
@@ -141,10 +142,11 @@ export default function RoomsPage() {
     }
   };
 
-  // Search by Type
-  const filteredRooms = rooms.filter(
-    (room) => !searchType || room.type === searchType
-  );
+  const filteredRooms = rooms.filter((room) => {
+    const matchesType = !searchType || room.type === searchType;
+    const matchesQuery = !searchQuery || room.roomNumber.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesType && matchesQuery;
+  });
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -282,21 +284,30 @@ export default function RoomsPage() {
               </div>
             )}
 
-            {/* Search by Type */}
+            {/* Search & Filter */}
             <div className="bg-white rounded-lg p-4 mb-6 border border-gray-200">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Filter by Room Type
-              </label>
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-              >
-                <option value="">All Types</option>
-                <option value="single">Single</option>
-                <option value="double">Double</option>
-                <option value="suite">Suite</option>
-              </select>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search by room number..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+                <select
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 sm:w-44"
+                >
+                  <option value="">All Types</option>
+                  <option value="single">Single</option>
+                  <option value="double">Double</option>
+                  <option value="suite">Suite</option>
+                </select>
+              </div>
             </div>
 
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
