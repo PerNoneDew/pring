@@ -328,8 +328,6 @@ export default function RoomsPage() {
                         Amenities
                       </th>
                       <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                      </th>
-                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                         Actions
                       </th>
                     </tr>
@@ -365,11 +363,6 @@ export default function RoomsPage() {
                               </Badge>
                             )}
                           </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <Badge className={statusColors[room.status]}>
-                            {room.status === 'reserved' ? 'Reserved' : room.status.charAt(0).toUpperCase() + room.status.slice(1)}
-                          </Badge>
                         </td>
                         <td className="px-6 py-4">
                           <DropdownMenu>
@@ -434,9 +427,7 @@ export default function RoomsPage() {
                           </h3>
                           <p className="text-sm text-gray-600 capitalize">{room.type}</p>
                         </div>
-                        <Badge className={statusColors[room.status]}>
-                          {room.status === 'reserved' ? 'Reserved' : room.status.charAt(0).toUpperCase() + room.status.slice(1)}
-                        </Badge>
+
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
