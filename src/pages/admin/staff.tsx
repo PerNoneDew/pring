@@ -165,13 +165,13 @@ export default function StaffManagementPage() {
         <main className="flex-1 overflow-auto">
           <div className="p-6 max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800">Users Management</h2>
+              <h2 className="text-3xl font-bold text-gray-800">Staff Management</h2>
               <button
                 onClick={() => setShowAddForm(!showAddForm)}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition flex items-center gap-2"
               >
                 <Plus size={18} />
-                Add User
+                Add Staff
               </button>
             </div>
 
@@ -179,7 +179,7 @@ export default function StaffManagementPage() {
             {showAddForm && (
               <Card className="mb-6 border-l-4 border-blue-500">
                 <CardHeader>
-                  <CardTitle>Add New User</CardTitle>
+                  <CardTitle>Add New Staff</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -310,7 +310,7 @@ export default function StaffManagementPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-gray-600">
-                    Total Users
+                    Total Staff
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -323,7 +323,7 @@ export default function StaffManagementPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-gray-600">
-                    Active Users
+                    Active Staff
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -336,7 +336,7 @@ export default function StaffManagementPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-medium text-gray-600">
-                    Inactive Users
+                    Inactive Staff
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -364,7 +364,7 @@ export default function StaffManagementPage() {
             {/* Staff Table */}
             <Card>
               <CardHeader>
-                <CardTitle>Users List</CardTitle>
+                <CardTitle>Staff List</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -472,7 +472,7 @@ export default function StaffManagementPage() {
             <Card className="w-full max-w-md mx-4 border-2 border-green-500">
               <CardHeader>
                 <CardTitle className="text-center text-green-600">
-                  User Account Created Successfully!
+                  Staff Account Created Successfully!
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
