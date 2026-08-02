@@ -420,7 +420,7 @@ export default function StaffManagementPage() {
                                   : 'bg-red-100 text-red-800'
                               }
                             >
-                              {staff.status === 'active' ? 'Active' : 'Deactivate'}
+                              {staff.status === 'active' ? 'Activate' : 'Deactivate'}
                             </Badge>
                           </td>
                           <td className="px-4 py-3 text-gray-700">
