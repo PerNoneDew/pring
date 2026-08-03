@@ -70,8 +70,11 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2.5">
             <img src="/image.png" alt="Pring Kuya's Inn" className="h-10 w-auto object-contain" />
+            <span className="font-serif text-xl font-bold text-gray-900 tracking-tight whitespace-nowrap">
+              PRING KUYA'S INN
+            </span>
           </Link>
 
           {/* Nav links */}
