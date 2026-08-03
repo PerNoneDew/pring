@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useBooking } from '../lib/context';
-import { BedDouble, Users, Wifi, Wind, Tv, Star, ArrowRight, LogOut } from 'lucide-react';
+import { BedDouble, Users, Wifi, Wind, Tv, Star, ArrowRight, LogOut, Eye } from 'lucide-react';
 
 const HERO_BG = 'https://images.pexels.com/photos/7507131/pexels-photo-7507131.jpeg?auto=compress&cs=tinysrgb&h=1280&w=1920';
 
@@ -147,20 +147,27 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-black/62" />
         <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
           {/* Stars */}
-          <div className="flex justify-center gap-1.5 mb-5">
+          <div className="flex justify-center gap-1.5 mb-5 landing-pop-up" style={{ animationDelay: '0.1s' }}>
             {[...Array(5)].map((_, i) => (
               <Star key={i} size={20} className="fill-amber-400 text-amber-400" />
             ))}
           </div>
-          <h1 className="font-serif text-5xl sm:text-6xl font-bold text-white leading-tight mb-5">
+          <h1
+            className="font-serif text-5xl sm:text-6xl font-bold text-white leading-tight mb-5 landing-pop-up"
+            style={{ animationDelay: '0.25s' }}
+          >
             Your Perfect Stay<br />Awaits
           </h1>
-          <p className="text-gray-200 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+          <p
+            className="text-gray-200 text-lg mb-8 max-w-xl mx-auto leading-relaxed landing-fade-up"
+            style={{ animationDelay: '0.5s' }}
+          >
             Discover our collection of beautifully appointed rooms and suites, crafted for the discerning traveler.
           </p>
           <button
             onClick={handleExploreRooms}
-            className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-gray-900 font-semibold px-8 py-3 rounded-lg hover:bg-gray-100 transition-all shadow-lg landing-pop-in"
+            style={{ animationDelay: '0.7s' }}
           >
             Explore Rooms
           </button>
@@ -170,15 +177,15 @@ export default function LandingPage() {
       {/* ── Stats ── */}
       <section className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-3 divide-x divide-gray-200 text-center">
-          <div className="px-6">
+          <div className="px-6 landing-fade-up">
             <p className="text-4xl font-bold text-gray-900">{roomTypes}</p>
             <p className="text-sm text-gray-500 mt-1">Room Types</p>
           </div>
-          <div className="px-6">
+          <div className="px-6 landing-fade-up" style={{ animationDelay: '0.15s' }}>
             <p className="text-4xl font-bold text-gray-900">100%</p>
             <p className="text-sm text-gray-500 mt-1">Guest Satisfaction</p>
           </div>
-          <div className="px-6">
+          <div className="px-6 landing-fade-up" style={{ animationDelay: '0.3s' }}>
             <p className="text-4xl font-bold text-gray-900">24/7</p>
             <p className="text-sm text-gray-500 mt-1">Concierge Service</p>
           </div>
@@ -188,8 +195,8 @@ export default function LandingPage() {
       {/* ── Rooms ── */}
       <section ref={roomsRef} className="max-w-7xl mx-auto px-6 py-16">
         <div className="mb-10">
-          <h2 className="font-serif text-4xl font-bold text-gray-900 mb-3">Our Rooms &amp; Suites</h2>
-          <p className="text-gray-500 max-w-lg leading-relaxed">
+          <h2 className="font-serif text-4xl font-bold text-gray-900 mb-3 landing-fade-up">Our Rooms &amp; Suites</h2>
+          <p className="text-gray-500 max-w-lg leading-relaxed landing-fade-up" style={{ animationDelay: '0.15s' }}>
             From cozy standard rooms to lavish suites — find the perfect space for your stay.
           </p>
         </div>
@@ -206,20 +213,27 @@ export default function LandingPage() {
               return (
                 <div
                   key={room.id}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col"
+                  className="room-card-float landing-fade-up bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 flex flex-col cursor-pointer"
+                  style={{ animationDelay: `${0.1 + idx * 0.08}s` }}
                 >
                   {/* Image */}
                   <div className="relative h-52 overflow-hidden">
                     <img
                       src={imgSrc}
                       alt={`Room ${room.roomNumber}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      className="room-card-img w-full h-full object-cover transition-transform duration-500"
                     />
                     <span
                       className={`absolute top-3 left-3 text-xs font-semibold px-3 py-1 rounded-full ${TYPE_BADGE_COLORS[room.type] || 'bg-white text-gray-800'}`}
                     >
                       {TYPE_LABELS[room.type] || room.type}
                     </span>
+                    {/* Hover overlay */}
+                    <div className="room-card-overlay absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 flex items-end p-4 pointer-events-none">
+                      <span className="text-white text-sm font-medium flex items-center gap-1.5">
+                        <Eye size={15} /> Click to view details
+                      </span>
+                    </div>
                   </div>
 
                   {/* Body */}
@@ -265,7 +279,7 @@ export default function LandingPage() {
                     <div className="mt-auto">
                       <button
                         onClick={handleViewBook}
-                        className="w-full flex items-center justify-center gap-2 bg-amber-900 hover:bg-amber-800 text-white font-semibold py-3 rounded-lg transition-colors text-sm"
+                        className="room-card-book-btn w-full flex items-center justify-center gap-2 bg-amber-900 hover:bg-amber-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 text-sm"
                       >
                         View &amp; Book
                         <ArrowRight size={15} />
