@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { BookingProvider, useBooking } from './lib/context';
 import { Toaster } from './components/ui/toaster';
 import { TransitionProvider } from './providers/transition-provider';
+import LandingPage from './pages/landing';
 import LoginPage from './pages/login';
 import SignupPage from './pages/signup';
 import AdminPage from './pages/admin';
@@ -46,7 +47,7 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 

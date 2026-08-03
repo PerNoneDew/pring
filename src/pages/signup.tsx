@@ -73,7 +73,7 @@ export default function SignupPage() {
 
       addCustomerAccount(userData);
       setCurrentUser(userData);
-      navigate('/customer');
+      navigate('/');
     } catch (err) {
       setIsLoading(false);
     }

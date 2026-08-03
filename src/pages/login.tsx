@@ -112,7 +112,7 @@ export default function LoginPage() {
       const dashboardMap: Record<UserRole, string> = {
         admin: '/admin',
         staff: '/staff',
-        customer: '/customer',
+        customer: '/',
       };
       navigate(dashboardMap[role]);
     } catch (err) {
