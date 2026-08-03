@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useBooking } from '../lib/context';
-import { BedDouble, Users, Wifi, Wind, Tv, Star, ArrowRight, LogOut, Eye } from 'lucide-react';
+import { Users, Wifi, Wind, Tv, Star, ArrowRight, LogOut, Eye } from 'lucide-react';
 
-const HERO_BG = 'https://images.pexels.com/photos/7507131/pexels-photo-7507131.jpeg?auto=compress&cs=tinysrgb&h=1280&w=1920';
+const HERO_BG = '/login-bg.jpg';
 
 const ROOM_IMAGES = [
   'https://images.pexels.com/photos/6434592/pexels-photo-6434592.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -70,9 +70,8 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 font-serif text-xl font-bold text-gray-900 tracking-tight">
-            <BedDouble size={22} className="text-amber-800" />
-            Pring Kuya's Inn
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/image.png" alt="Pring Kuya's Inn" className="h-10 w-auto object-contain" />
           </Link>
 
           {/* Nav links */}
