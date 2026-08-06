@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { supabase } from './supabase';
-import { User, Booking, Room, DashboardMetrics, EventBooking, Service, PaymentConfig, PaymentMethod, StaffAccount } from './types';
+import { User, Booking, Room, DashboardMetrics, EventBooking, Service, PaymentConfig, PaymentMethod, StaffAccount, BusinessInfo } from './types';
 import type {
   DatabaseRoom,
   DatabaseService,
@@ -34,6 +34,8 @@ export interface BookingContextType {
   addCustomerAccount: (user: User & { password: string }) => void;
   paymentConfig: PaymentConfig;
   setPaymentConfig: (config: PaymentConfig) => void;
+  businessInfo: BusinessInfo;
+  setBusinessInfo: (info: BusinessInfo) => void;
   addBooking: (booking: Booking) => void;
   updateBooking: (id: string, booking: Partial<Booking>) => void;
   deleteBooking: (id: string) => void;
@@ -172,6 +174,7 @@ export function BookingProvider({ children }: { children: ReactNode }) {
   const [staffAccounts, setStaffAccounts] = useState<StaffAccount[]>([]);
   const [customerAccounts, setCustomerAccounts] = useState<(User & { password?: string })[]>([]);
   const [paymentConfig, setPaymentConfig] = useState<PaymentConfig>({ gcashNumber: '', mayaNumber: '' });
+  const [businessInfo, setBusinessInfoState] = useState<BusinessInfo>({});
   const [eventTypePrices, setEventTypePrices] = useState<EventTypePrice[]>([
     { type: 'birthday', price: 5000 },
     { type: 'wedding', price: 15000 },
@@ -253,10 +256,17 @@ export function BookingProvider({ children }: { children: ReactNode }) {
           });
         }
 
-        // Set admin password
+        // Set admin password and business info
         if (appSettingsData.data && appSettingsData.data.length > 0) {
           const settings = appSettingsData.data[0] as DatabaseAppSettings;
           setAdminPassword(settings.admin_password);
+          setBusinessInfoState({
+            ownerName: settings.owner_name || undefined,
+            fbLink: settings.fb_link || undefined,
+            businessPermitUrl: settings.business_permit_url || undefined,
+            contactNumber: settings.contact_number || undefined,
+            location: settings.location || undefined,
+          });
         }
 
       } catch (error) {
@@ -790,6 +800,28 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  // Business info
+  const handleSetBusinessInfo = async (info: BusinessInfo) => {
+    try {
+      const { error } = await supabase
+        .from('app_settings')
+        .update({
+          owner_name: info.ownerName || null,
+          fb_link: info.fbLink || null,
+          business_permit_url: info.businessPermitUrl || null,
+          contact_number: info.contactNumber || null,
+          location: info.location || null,
+        })
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (error) throw error;
+
+      setBusinessInfoState(info);
+    } catch (error) {
+      console.error('Error saving business info:', error);
+    }
+  };
+
   // Payment config
   const handleSetPaymentConfig = async (config: PaymentConfig) => {
     try {
@@ -848,6 +880,8 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     addCustomerAccount,
     paymentConfig,
     setPaymentConfig: handleSetPaymentConfig,
+    businessInfo,
+    setBusinessInfo: handleSetBusinessInfo,
     addBooking,
     updateBooking,
     deleteBooking,

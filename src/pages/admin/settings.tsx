@@ -1,21 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AdminSidebar } from '../../components/admin/sidebar';
 import { AdminHeader } from '../../components/admin/header';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { useBooking } from '../../lib/context';
-import { Settings, User, Bell, Lock, LogOut, CreditCard } from 'lucide-react';
+import { Settings, User, Bell, Lock, LogOut, CreditCard, MapPin, Phone, Facebook, FileImage, Store } from 'lucide-react';
 import { showSuccessNotification, showErrorNotification } from '../../lib/notifications';
+import { supabase } from '../../lib/supabase';
 
 export default function AdminSettingsPage() {
   const navigate = useNavigate();
-  const { currentUser, paymentConfig, setPaymentConfig, adminPassword, changeAdminPassword } = useBooking();
+  const { currentUser, paymentConfig, setPaymentConfig, adminPassword, changeAdminPassword, businessInfo, setBusinessInfo } = useBooking();
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [gcashNumber, setGcashNumber] = useState(paymentConfig.gcashNumber || '');
   const [mayaNumber, setMayaNumber] = useState(paymentConfig.mayaNumber || '');
+
+  const [ownerName, setOwnerName] = useState(businessInfo.ownerName || '');
+  const [fbLink, setFbLink] = useState(businessInfo.fbLink || '');
+  const [contactNumber, setContactNumber] = useState(businessInfo.contactNumber || '');
+  const [location, setLocation] = useState(businessInfo.location || '');
+  const [permitUrl, setPermitUrl] = useState(businessInfo.businessPermitUrl || '');
+  const [permitPreview, setPermitPreview] = useState(businessInfo.businessPermitUrl || '');
+  const [uploadingPermit, setUploadingPermit] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setOwnerName(businessInfo.ownerName || '');
+    setFbLink(businessInfo.fbLink || '');
+    setContactNumber(businessInfo.contactNumber || '');
+    setLocation(businessInfo.location || '');
+    setPermitUrl(businessInfo.businessPermitUrl || '');
+    setPermitPreview(businessInfo.businessPermitUrl || '');
+  }, [businessInfo]);
 
   // Log Out
   const handleLogout = () => {
@@ -35,6 +54,71 @@ export default function AdminSettingsPage() {
     showSuccessNotification({
       title: 'Profile Updated',
       description: 'Your personal information has been saved successfully.',
+    });
+  };
+
+  // Upload business permit image
+  const handlePermitUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      showErrorNotification({
+        title: 'File Too Large',
+        description: 'Please upload an image smaller than 5MB.',
+      });
+      return;
+    }
+
+    setUploadingPermit(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `business-permit-${Date.now()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('business-permits')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('business-permits')
+        .getPublicUrl(fileName);
+
+      setPermitUrl(data.publicUrl);
+      setPermitPreview(data.publicUrl);
+      showSuccessNotification({
+        title: 'Permit Uploaded',
+        description: 'Business permit image uploaded successfully.',
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      showErrorNotification({
+        title: 'Upload Failed',
+        description: 'Could not upload the permit image. Please try again.',
+      });
+    } finally {
+      setUploadingPermit(false);
+    }
+  };
+
+  const handleRemovePermit = () => {
+    setPermitUrl('');
+    setPermitPreview('');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Save business info
+  const handleSaveBusinessInfo = () => {
+    setBusinessInfo({
+      ownerName,
+      fbLink,
+      businessPermitUrl: permitUrl,
+      contactNumber,
+      location,
+    });
+    showSuccessNotification({
+      title: 'Business Info Saved',
+      description: 'Your business information has been saved successfully.',
     });
   };
 
@@ -104,6 +188,128 @@ export default function AdminSettingsPage() {
             <h2 className="text-3xl font-bold text-gray-800 mb-8">
               System Settings
             </h2>
+
+            {/* Business Information */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Store size={24} className="text-emerald-600" />
+                  Business Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Owner's Name
+                  </label>
+                  <input
+                    type="text"
+                    value={ownerName}
+                    onChange={(e) => setOwnerName(e.target.value)}
+                    placeholder="e.g., Juan Dela Cruz"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <Facebook size={16} className="text-blue-600" />
+                      Facebook
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={fbLink}
+                    onChange={(e) => setFbLink(e.target.value)}
+                    placeholder="e.g., https://facebook.com/yourpage"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <Phone size={16} className="text-gray-600" />
+                      Contact Number
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={contactNumber}
+                    onChange={(e) => setContactNumber(e.target.value)}
+                    placeholder="e.g., +63 917 123 4567"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin size={16} className="text-red-500" />
+                      Location
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="e.g., 123 Main Street, City, Province"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <FileImage size={16} className="text-purple-600" />
+                      Business Permit
+                    </span>
+                  </label>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePermitUpload}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Upload an image of your business permit (max 5MB)
+                  </p>
+
+                  {uploadingPermit && (
+                    <div className="mt-3 flex items-center gap-2 text-sm text-gray-600">
+                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                      Uploading...
+                    </div>
+                  )}
+
+                  {permitPreview && !uploadingPermit && (
+                    <div className="mt-3 relative inline-block">
+                      <img
+                        src={permitPreview}
+                        alt="Business Permit"
+                        className="max-h-48 rounded-lg border border-gray-200"
+                      />
+                      <button
+                        onClick={handleRemovePermit}
+                        className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm shadow-lg transition"
+                        title="Remove permit image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={handleSaveBusinessInfo}
+                  className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition"
+                >
+                  Save Business Info
+                </button>
+              </CardContent>
+            </Card>
 
             {/* Admin Profile */}
             <Card className="mb-6">

@@ -123,5 +123,10 @@ export interface DatabasePaymentConfig {
 export interface DatabaseAppSettings {
   id: string;
   admin_password: string;
+  owner_name: string | null;
+  fb_link: string | null;
+  business_permit_url: string | null;
+  contact_number: string | null;
+  location: string | null;
   updated_at: string;
 }

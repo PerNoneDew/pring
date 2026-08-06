@@ -114,6 +114,14 @@ export interface PaymentConfig {
   lastUpdated?: string;
 }
 
+export interface BusinessInfo {
+  ownerName?: string;
+  fbLink?: string;
+  businessPermitUrl?: string;
+  contactNumber?: string;
+  location?: string;
+}
+
 // Dashboard Metrics
 export interface DashboardMetrics {
   todaysBookings: number;
